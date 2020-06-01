@@ -1,7 +1,7 @@
 
 const Nakamura = require("../index.js");
 
-const bot = new Nakamura.Client("NjcyMTU3OTgxNjMwMjY3NDAy.XtOblw.Kae99Uaccx0PKYI2Gwgdqu0Q_Zg");
+const bot = new Nakamura.Client("");
 
 
 bot.on("MESSAGE_CREATE", async (message) => {
@@ -14,7 +14,7 @@ bot.on("MESSAGE_CREATE", async (message) => {
     if (message.content === "!pong") { 
         bot.sendToUser(message.author.id, "ping!");
     }
-    
+
 });
 
 bot.connect();
