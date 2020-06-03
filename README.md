@@ -8,7 +8,8 @@ Yes, you are meant to build on top of this to fit your needs
 The idea is that **you** cache everything you need. The library should not do any caching. It will provide you with help methods for easier use. It's somewhat similar to Eris, where every method for interacting with the Discord API is part of the `Client` class.
 
 All of the events are coming straight from the discord gateway. Event list: https://discord.com/developers/docs/topics/gateway#commands-and-events-gateway-events
-Example:
+
+## Examples
 
 ```js
 class Message {
@@ -32,64 +33,47 @@ client.on("MESSAGE_CREATE", message => {
 });
 ```
 
-Keeping track of permissions: (And that's just role permissions, without channel permission overwrites, have fun):
+
+## Sharding
+
+This lib supports internal sharding as well as splitting your bot into processes. 
+
+### Internal Sharding
 
 ```js
+ const client = new Client("yourToken", {shards: 2}); // Spawns 2 shards
+``` 
 
-class You {
-    constructor(data) {
-        this.roles = new Set(data.roles);
-    }
-}
-class Role {
-    constructor(data) {
-        this.permissions = data.permissions;
-        this.position = data.position;
-    }
-}
+### Process Sharding
 
-class Guild {
-    constructor(client, data) {
-        this.you = new You(data.members.find(m => m.user.id === client.user.id));
-        this.rolePerms = new Map();
-        for (let role of data.roles) this.rolePerms.set(role.id, new Role(role))
-    }
-}
-const guilds = new Map();
+```js
+ const ShardingManager = require("./index.js").ShardingManager;
 
-client.on("READY", data => {
-    client.user = data.user;
+ const workers = ShardingManager("./pathToMainFile.js", 2, 1); // Creates 2 clients with 1 shard each
+ // workers is an array of worker threads. You can communicate with them from this file.
+
+ workers[0].on("message", data) { // Listening for data (THIS LISTENS ONLY FOR THE FIRST CLIENT'S MESSAGES)
+     console.log(data); 
+     workers[0].postMessage({m: "Message Name", d: "Some Data"}) // Send messages to client
+ }
+
+// Meanwhile, in your ./pathToMainFile.js:
+
+const {parentPort} = require("worker_threads");
+
+parentPort.on("message", data => {
+  if (data.m === "Message Name") parentPort.postMessage({m: "Some other Message", d: "Some other Data"});
 });
 
-client.on("GUILD_LOAD", guild => {
-      guilds.set(guild.id, new Guild(client, guild));
+client.on("READY", (data, shard) => {
+    parentPort.postMessage({m: "READY", d: shard.shardId}); // Send "READY" to the process manager when one of the shards is ready
 });
+```
 
-client.on("GUILD_CREATE", guild => {
-    guilds.set(guild.id, new Guild(client, guild));
-});
+### A mix of the two
 
-client.on("GUILD_DELETE", guild => {
-    guilds.delete(guild.id);
-})
+```js
+const ShardingManager = require("./index.js").ShardingManager;
 
-client.on("GUILD_MEMBER_UPDATE", member => {
-    if (member.user.id === client.user.id) guilds.get(member.guild_id).you = new You(member);
-});
-
-client.on("GUILD_ROLE_UPDATE", role => {
-    guilds.get(role.guild_id).rolePerms.set(role.role.id, new Role(role.role));
-});
-
-client.on("GUILD_ROLE_CREATE", role => {
-    guilds.get(role.guild_id).rolePerms.set(role.role.id, new Role(role.role));
-});
-
-client.on("GUILD_ROLE_DELETE", role => {
-    const guild = guilds.get(role.guild_id);
-    guilds.get(role.guild_id).rolePerms.delete(role.role_id);
-    if (guild.you.roles.has(role_id)) guild.you.roles.delete(role_id);
-});
-
-
+const workers = ShardingManager("./pathToMainFile.js", 2, 3); // Creates 2 clients with 3 shards each, which means there's a total of 6 shards
 ```

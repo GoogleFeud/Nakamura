@@ -6,7 +6,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
-    "erlpack": "^0.1.3",
+    "erlpack": "github:discordapp/erlpack",
     "eventemitter3": "^4.0.0",
     "node-fetch": "^2.6.0",
     "ws": "^7.2.3",
