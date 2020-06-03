@@ -28,7 +28,7 @@ class Message {
 const client = new Client("yourToken");
 
 client.on("MESSAGE_CREATE", message => {
-    message = new Message(message);
+    message = new Message(client, message);
     if (message.content === "!test") message.reply("tested!");
 });
 ```
