@@ -27,12 +27,23 @@ class Message {
 
 const client = new Client("yourToken");
 
-client.on("MESSAGE_CREATE", message => {
+client.events.on("MESSAGE_CREATE", message => {
     message = new Message(client, message);
     if (message.content === "!test") message.reply("tested!");
 });
 ```
 
+## HTTPClient
+
+The `Client` class extneds the `HTTPClient` class, which is made specifically for HTTP requests to the Discord API. You can use this class without having a `Client`class. 
+**Note:** Some of the API endpoints require a connection to the gateway, so you must have a running bot to send messages for example. You can use this class when you don't have access to any `Client` objects, but still want to interact with the API.
+
+```js
+const client = new HTTPClient("yourToken");
+
+client.fetchGuild("someGuildID");
+client.sendToChannel("someChannelId", "some message :D");
+```
 
 ## Sharding
 
@@ -65,7 +76,7 @@ parentPort.on("message", data => {
   if (data.m === "Message Name") parentPort.postMessage({m: "Some other Message", d: "Some other Data"});
 });
 
-client.on("READY", (data, shard) => {
+client.events.on("READY", (data, shard) => {
     parentPort.postMessage({m: "READY", d: shard.shardId}); // Send "READY" to the process manager when one of the shards is ready
 });
 ```
