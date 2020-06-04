@@ -5,3 +5,6 @@ module.exports = {
     HTTPClient: require("./lib/rest/HttpClient")
 }
 
+Object.defineProperty(module.exports, "Util", {
+    get: () => require("./lib/Util.js")
+});

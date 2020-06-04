@@ -35,7 +35,7 @@ client.events.on("MESSAGE_CREATE", message => {
 
 ## HTTPClient
 
-The `Client` class extneds the `HTTPClient` class, which is made specifically for HTTP requests to the Discord API. You can use this class without having a `Client`class. 
+The `Client` class extends the `HTTPClient` class, which is made specifically for HTTP requests to the Discord API. You can use this class without having a `Client`class. 
 **Note:** Some of the API endpoints require a connection to the gateway, so you must have a running bot to send messages for example. You can use this class when you don't have access to any `Client` objects, but still want to interact with the API.
 
 ```js
@@ -43,6 +43,17 @@ const client = new HTTPClient("yourToken");
 
 client.fetchGuild("someGuildID");
 client.sendToChannel("someChannelId", "some message :D");
+```
+
+## Util
+
+This lib also features a bunch of utility methods and constants (Permission flags, Message flags, User flags, Mentions regex, splitting messages, generating snowflakes, escaping markdown, and others, [check it out](https://github.com/GoogleFeud/Nakamura/blob/better/lib/Util.js)) that are TOTALLY not copied from `discord.js`. Phuh. (They were).
+
+The library is supposed to be super light, so when you require the main file for this lib, the `Util` file won't be required, so all the Constants and functions won't be loaded into memory. They will be loaded when you first use any of the constants/functions.
+
+```js
+const Nakamura = require("./path/to/index/file.js");
+console.log(nakamura.Utils.generateSnowflake());
 ```
 
 ## Sharding
