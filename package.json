@@ -8,6 +8,7 @@
   "dependencies": {
     "erlpack": "github:discordapp/erlpack",
     "eventemitter3": "^4.0.0",
+    "form-data": "^3.0.0",
     "node-fetch": "^2.6.0",
     "ws": "^7.2.3",
     "zlib-sync": "^0.1.6"
