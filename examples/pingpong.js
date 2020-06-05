@@ -12,7 +12,7 @@ bot.on("MESSAGE_CREATE", async (message) => {
     }
 
     if (message.content === "!pong") { 
-        bot.sendToUser(message.author.id, "ping!");
+        bot.sendToChannel(message.author.id, "ping!");
     }
 
 });
