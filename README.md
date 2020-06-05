@@ -1,7 +1,12 @@
 # Nakamura
-## lightweight and extensible Discord API wrapper
 
-Yes, you are meant to build on top of this to fit your needs
+lightweight and extensible Discord API wrapper
+
+## Install
+
+```
+npm i GoogleFeud/Nakamura
+```
 
 ## Idea
 
@@ -12,24 +17,16 @@ All of the events are coming straight from the discord gateway. Event list: http
 ## Examples
 
 ```js
-class Message {
-    constructor(client, data) {
-        this.client = client;
-        this.content = data.content;
-        this.author = data.author;
-        this.channel = data.channel_id;
-    }
-
-    reply(content = "") {
-        this.client.sendToChannel(this.channel, `${this.author.username}, ${content}`);
-    }
-}
-
 const client = new Client("yourToken");
 
-client.events.on("MESSAGE_CREATE", message => {
-    message = new Message(client, message);
-    if (message.content === "!test") message.reply("tested!");
+const prefix = "#";
+client.events.on("MESSAGE_CREATE", async message => {
+    if (message.author.bot || !message.content.startsWith(prefix)) return;
+    if (message.content === `${prefix}ping`) {
+        const bef = Date.now();
+        const msg = await client.sendToChannel(message.channel_id, "Ping!");
+        client.editMessage(msg.channel_id, msg.id, `Ping! Took me ${Date.now() - bef}ms`);
+    }
 });
 ```
 

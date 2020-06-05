@@ -2,4 +2,5 @@ node_modules/
 # ignore locally generated jsdoc
 out/
 test.js
+test.jpg
 shardTest.js
