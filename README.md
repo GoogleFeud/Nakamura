@@ -5,7 +5,7 @@ lightweight and extensible Discord API wrapper
 ## Install
 
 ```
-npm i GoogleFeud/Nakamura
+npm i GoogleFeud/Nakamura erlpack node-fetch form-data
 ```
 
 ## Idea
