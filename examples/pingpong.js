@@ -4,7 +4,7 @@ const Nakamura = require("../index.js");
 const bot = new Nakamura.Client("");
 
 
-bot.on("MESSAGE_CREATE", async (message) => {
+bot.events.on("MESSAGE_CREATE", async (message) => {
     if (message.content === "!ping") {
         const before = Date.now();
         const msg = await bot.sendToChannel(message.channel_id, "Pong!");
