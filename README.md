@@ -69,10 +69,10 @@ This lib supports internal sharding as well as splitting your bot into processes
  const ShardingManager = require("./index.js").ShardingManager;
 
 ShardingManager("./pathToMainFile.js", 2, 1).then(workers => {  // workers is an array of worker threads. You can communicate with them from this file.
-     workers[0].on("message", data) { // Listening for data (THIS LISTENS ONLY FOR THE FIRST CLIENT'S MESSAGES)
+     workers[0].on("message", data => { // Listening for data (THIS LISTENS ONLY FOR THE FIRST CLIENT'S MESSAGES)
      console.log(data); // {m: "Some message name", d: "Some Data Name"}
      workers[0].postMessage({m: "Some other message name", d: "Some Data"}) // Send messages to client
- }
+ });
 }); // Creates 2 clients with 1 shard each
 
 // Meanwhile, in your ./pathToMainFile.js:
