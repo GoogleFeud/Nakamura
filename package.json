@@ -10,8 +10,7 @@
     "eventemitter3": "^4.0.0",
     "form-data": "^3.0.0",
     "node-fetch": "^2.6.0",
-    "ws": "^7.2.3",
-    "zlib-sync": "^0.1.6"
+    "ws": "^7.2.3"
   },
   "scripts": {
     "doc": "jsdoc lib README.md -r -t node_modules/docdash --verbose"

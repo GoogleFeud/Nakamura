@@ -5,7 +5,7 @@ lightweight and extensible Discord API wrapper
 ## Try it
 
 ```
-npm i GoogleFeud/Nakamura erlpack node-fetch form-data eventemitter3
+npm i GoogleFeud/Nakamura ws erlpack node-fetch form-data eventemitter3
 ```
 
 ## Idea
@@ -68,20 +68,19 @@ This lib supports internal sharding as well as splitting your bot into processes
 ```js
  const ShardingManager = require("./index.js").ShardingManager;
 
- const workers = ShardingManager("./pathToMainFile.js", 2, 1); // Creates 2 clients with 1 shard each
- // workers is an array of worker threads. You can communicate with them from this file.
-
- workers[0].on("message", data) { // Listening for data (THIS LISTENS ONLY FOR THE FIRST CLIENT'S MESSAGES)
-     console.log(data); 
-     workers[0].postMessage({m: "Message Name", d: "Some Data"}) // Send messages to client
+ShardingManager("./pathToMainFile.js", 2, 1).then(workers => {  // workers is an array of worker threads. You can communicate with them from this file.
+     workers[0].on("message", data) { // Listening for data (THIS LISTENS ONLY FOR THE FIRST CLIENT'S MESSAGES)
+     console.log(data); // {m: "Some message name", d: "Some Data Name"}
+     workers[0].postMessage({m: "Some other message name", d: "Some Data"}) // Send messages to client
  }
+}); // Creates 2 clients with 1 shard each
 
 // Meanwhile, in your ./pathToMainFile.js:
 
 const {parentPort} = require("worker_threads");
 
 parentPort.on("message", data => {
-  if (data.m === "Message Name") parentPort.postMessage({m: "Some other Message", d: "Some other Data"});
+  if (data.m === "Message Name") parentPort.postMessage({m: "Some message name", d: "Some data"});
 });
 
 client.events.on("READY", (data, shard) => {
