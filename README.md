@@ -73,7 +73,7 @@ ShardingManager("./pathToMainFile.js", 2, 1).then(workers => {  // workers is an
      console.log(data); // {m: "Some message name", d: "Some Data Name"}
      workers[0].postMessage({m: "Some other message name", d: "Some Data"}) // Send messages to client
  });
-}); // Creates 2 clients with 1 shard each
+}); // Creates 2 clients (aka processes) with 1 shard each
 
 // Meanwhile, in your ./pathToMainFile.js:
 
